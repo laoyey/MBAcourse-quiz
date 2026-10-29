@@ -1,0 +1,9 @@
+{
+  "name": "corporate-finance-quiz",
+  "version": "1.0.0",
+  "private": true,
+  "description": "公司金融 Ch05/Ch06/Ch09 交互式选择题题库（每章 90 题，测验每次随机 30 题）",
+  "scripts": {
+    "dev": "node server.js"
+  }
+}

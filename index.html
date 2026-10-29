@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="公司金融 Ch05/Ch06/Ch09 交互式选择题题库，每章 90 题，每次测验随机抽 30 题，附解析、错题复习与成绩统计。">
+  <title>公司金融学习室 · 三章交互题库</title>
+  <style>
+:root {
+  --ink: #182034;
+  --muted: #6f7688;
+  --soft: #9aa0af;
+  --paper: #f5f5f1;
+  --card: #ffffff;
+  --line: #e6e6e0;
+  --navy: #172238;
+  --navy-light: #24324c;
+  --purple: #6d5dfc;
+  --purple-soft: #efedff;
+  --green: #138a70;
+  --green-soft: #e9f7f1;
+  --red: #c64c55;
+  --red-soft: #fff0f0;
+  --orange: #d8783e;
+  --shadow: 0 12px 38px rgba(24, 32, 52, .06);
+  --radius: 18px;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  color: var(--ink);
+  background: var(--paper);
+  font-family: "Inter", "SF Pro Display", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+button { font: inherit; }
+button, a { -webkit-tap-highlight-color: transparent; }
+button:focus-visible { outline: 3px solid rgba(109, 93, 252, .28); outline-offset: 2px; }
+.hidden { display: none !important; }
+
+.app-shell { min-height: 100vh; }
+.sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 30;
+  width: 248px;
+  display: flex;
+  flex-direction: column;
+  padding: 28px 18px 20px;
+  color: #fff;
+  background:
+    radial-gradient(circle at 20% 10%, rgba(109, 93, 252, .18), transparent 30%),
+    linear-gradient(170deg, #19263e 0%, #121c2e 100%);
+}
+.brand { display: flex; align-items: center; gap: 12px; padding: 0 10px 30px; }
+.brand-mark {
+  width: 42px; height: 42px; border-radius: 13px;
+  display: grid; place-items: center; position: relative;
+  font-family: Georgia, serif; font-size: 25px; font-style: italic;
+  color: #172238; background: #f2c66d; box-shadow: inset 0 -3px 0 rgba(0,0,0,.1);
+}
+.brand-mark span { font: 700 11px/1 system-ui; position: absolute; right: 6px; bottom: 6px; }
+.brand strong { display: block; font-size: 17px; letter-spacing: .06em; }
+.brand small { display: block; margin-top: 5px; font-size: 8px; letter-spacing: .14em; color: #8e9ab1; }
+.nav-item {
+  width: 100%; border: 0; border-radius: 11px; padding: 12px 13px;
+  display: flex; align-items: center; gap: 11px; text-align: left;
+  color: #aeb8ca; background: transparent; cursor: pointer; transition: .2s ease;
+}
+.nav-item:hover { color: #fff; background: rgba(255,255,255,.06); }
+.nav-item.active { color: #fff; background: rgba(109, 93, 252, .25); box-shadow: inset 3px 0 #9184ff; }
+.nav-icon { width: 23px; font-size: 18px; text-align: center; color: #96a2b8; }
+.nav-item.active .nav-icon { color: #c9c2ff; }
+.nav-copy { flex: 1; min-width: 0; }
+.nav-copy strong { display: block; font-size: 12px; font-weight: 600; }
+.nav-copy small { display: block; margin-top: 3px; color: #7f8ca3; font-size: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.nav-progress { font-size: 10px; font-variant-numeric: tabular-nums; color: #8e9ab1; }
+.nav-label { margin: 26px 13px 10px; color: #65748e; font-size: 9px; font-weight: 700; letter-spacing: .16em; }
+.sidebar-note { margin: auto 8px 20px; padding: 16px; display: flex; gap: 10px; border: 1px solid rgba(255,255,255,.08); border-radius: 13px; background: rgba(255,255,255,.035); }
+.note-icon { color: #f2c66d; }
+.sidebar-note p { margin: 0; color: #8f9bb1; font-size: 11px; line-height: 1.8; }
+.sidebar-footer { display: flex; align-items: center; gap: 7px; padding: 0 8px; color: #68758b; font-size: 9px; }
+.save-dot { width: 6px; height: 6px; border-radius: 50%; background: #4eb99a; box-shadow: 0 0 0 3px rgba(78,185,154,.1); }
+.sidebar-backdrop { display: none; }
+
+.main-content { margin-left: 248px; min-height: 100vh; }
+.topbar {
+  height: 68px; padding: 0 42px; display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid var(--line); background: rgba(245,245,241,.9); backdrop-filter: blur(10px);
+  position: sticky; top: 0; z-index: 20;
+}
+.breadcrumb { display: flex; align-items: center; gap: 10px; font-size: 12px; }
+.breadcrumb span { color: var(--soft); }
+.breadcrumb b { color: #c4c5c0; font-weight: 400; }
+.breadcrumb strong { font-weight: 600; }
+.topbar-actions { display: flex; align-items: center; gap: 24px; }
+.keyboard-hint { color: var(--soft); font-size: 10px; }
+.text-button { border: 0; padding: 6px 0; color: var(--muted); background: transparent; cursor: pointer; font-size: 11px; }
+.text-button:hover { color: var(--red); }
+.mobile-menu { display: none !important; border: 0; background: transparent; font-size: 20px; cursor: pointer; }
+.view { max-width: 1380px; margin: 0 auto; padding: 38px 42px 60px; }
+
+.hero { min-height: 315px; display: grid; grid-template-columns: 1.2fr .8fr; gap: 30px; align-items: center; padding: 24px 12px 34px; }
+.eyebrow { display: flex; align-items: center; gap: 9px; margin-bottom: 18px; color: #777f90; font-size: 9px; font-weight: 700; letter-spacing: .16em; }
+.eyebrow span { width: 24px; height: 2px; background: var(--purple); }
+.hero h1 { margin: 0; font-size: clamp(38px, 4.1vw, 58px); line-height: 1.2; letter-spacing: -.055em; font-weight: 750; }
+.hero h1 em { color: var(--purple); font-family: Georgia, "Songti SC", serif; font-weight: 500; }
+.hero-copy > p { max-width: 580px; margin: 20px 0 25px; color: var(--muted); font-size: 13px; line-height: 1.9; }
+.hero-actions { display: flex; gap: 11px; flex-wrap: wrap; }
+.primary-button, .secondary-button {
+  border-radius: 10px; padding: 11px 18px; cursor: pointer; font-size: 12px; font-weight: 600; transition: .18s ease;
+}
+.primary-button { border: 1px solid var(--navy); color: #fff; background: var(--navy); box-shadow: 0 5px 12px rgba(23,34,56,.12); }
+.primary-button:hover { background: #283852; transform: translateY(-1px); }
+.primary-button span { margin-left: 20px; }
+.secondary-button { border: 1px solid #dcded8; color: var(--ink); background: #fff; }
+.secondary-button:hover { border-color: #b9bdc7; background: #fafafa; }
+.primary-button:disabled, .secondary-button:disabled { opacity: .38; cursor: not-allowed; transform: none; }
+
+.hero-visual { position: relative; height: 260px; display: grid; place-items: center; }
+.orbit { position: absolute; border: 1px solid #deded8; border-radius: 50%; transform: rotate(-18deg); }
+.orbit-one { width: 310px; height: 170px; }
+.orbit-two { width: 240px; height: 240px; border-style: dashed; opacity: .65; }
+.formula-card { position: relative; z-index: 2; width: 260px; padding: 26px 22px; border-radius: 17px; color: #fff; background: var(--navy); box-shadow: 0 25px 50px rgba(23,34,56,.2); transform: rotate(-3deg); }
+.formula-card > span { color: #9ca9bf; font-size: 8px; letter-spacing: .18em; }
+.formula-card strong { display: block; margin: 17px 0; font: 400 21px/1.4 Georgia, serif; white-space: nowrap; }
+.formula-card small { color: #8f9bb0; font-size: 10px; }
+.formula-chip { position: absolute; z-index: 3; padding: 9px 13px; border: 1px solid #e2e1da; border-radius: 9px; color: #4f586b; background: rgba(255,255,255,.92); box-shadow: 0 7px 20px rgba(24,32,52,.07); font: 13px Georgia, serif; }
+.chip-one { left: 0; top: 37px; transform: rotate(5deg); }
+.chip-two { right: 0; top: 56px; transform: rotate(4deg); }
+.chip-three { right: 13px; bottom: 26px; transform: rotate(-5deg); }
+
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 13px; margin-bottom: 42px; }
+.stat-card { padding: 18px 20px; border: 1px solid var(--line); border-radius: 14px; background: rgba(255,255,255,.7); }
+.stat-card .stat-label { display: flex; align-items: center; justify-content: space-between; color: var(--muted); font-size: 10px; }
+.stat-card .stat-icon { color: #a0a5b1; font-size: 15px; }
+.stat-card strong { display: inline-block; margin-top: 9px; font-size: 26px; letter-spacing: -.04em; }
+.stat-card small { margin-left: 5px; color: var(--soft); font-size: 10px; }
+.section-heading { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 17px; }
+.section-kicker { color: var(--purple); font-size: 8px; font-weight: 700; letter-spacing: .18em; }
+.section-heading h2 { margin: 5px 0 0; font-size: 23px; letter-spacing: -.03em; }
+.section-caption { color: var(--soft); font-size: 10px; }
+.chapter-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.chapter-card { position: relative; overflow: hidden; padding: 23px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--card); box-shadow: 0 4px 15px rgba(24,32,52,.025); transition: .22s ease; }
+.chapter-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); border-color: #d9d8d2; }
+.chapter-card::after { content: ""; position: absolute; width: 110px; height: 110px; right: -55px; top: -55px; border-radius: 50%; background: var(--chapter-soft); }
+.chapter-number { display: flex; align-items: center; justify-content: space-between; margin-bottom: 22px; }
+.chapter-number > span { color: var(--chapter-color); font: 700 10px/1 system-ui; letter-spacing: .12em; }
+.chapter-number small { padding: 4px 7px; border-radius: 5px; color: var(--muted); background: #f4f4f0; font-size: 9px; }
+.chapter-card h3 { margin: 0 0 6px; font-size: 19px; letter-spacing: -.025em; }
+.chapter-english { height: 28px; margin: 0; color: var(--soft); font: 10px/1.4 Georgia, serif; }
+.chapter-description { min-height: 55px; margin: 15px 0; color: var(--muted); font-size: 11px; line-height: 1.7; }
+.distribution { display: flex; height: 5px; overflow: hidden; gap: 2px; margin: 18px 0 9px; border-radius: 5px; }
+.distribution span { min-width: 3px; }
+.distribution-legend { display: flex; justify-content: space-between; color: var(--soft); font-size: 8px; }
+.chapter-card-footer { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 21px; padding-top: 16px; border-top: 1px solid #efefeb; flex-wrap: wrap; }
+.chapter-card-footer span { color: var(--muted); font-size: 10px; }
+.card-start { border: 0; color: var(--chapter-color); background: transparent; cursor: pointer; font-size: 11px; font-weight: 700; }
+.card-test { border: 1px solid var(--chapter-color); color: var(--chapter-color); background: transparent; cursor: pointer; font-size: 11px; font-weight: 700; border-radius: 8px; padding: 7px 12px; }
+.card-test:hover { background: var(--chapter-soft); }
+.test-best { display: block; width: 100%; margin-top: 9px; color: var(--soft); font-size: 9px; }
+.method-note { display: flex; gap: 15px; margin-top: 22px; padding: 18px 22px; border: 1px solid #e2e0f2; border-radius: 14px; background: #f0eff8; }
+.method-icon { color: var(--purple); font-size: 22px; }
+.method-note strong { font-size: 11px; }
+.method-note p { margin: 5px 0 0; color: #707388; font-size: 10px; line-height: 1.75; }
+
+.quiz-view { max-width: 1280px; }
+.quiz-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; padding: 4px 0 24px; }
+.eyebrow.compact { margin: 0 0 8px; color: var(--chapter-color, var(--purple)); }
+.quiz-heading h1 { margin: 0; font-size: 30px; letter-spacing: -.035em; }
+.quiz-heading p { max-width: 670px; margin: 10px 0 0; color: var(--muted); font-size: 11px; line-height: 1.7; }
+.quiz-heading-actions { display: flex; gap: 9px; flex-shrink: 0; }
+.chapter-progress-card { margin-bottom: 20px; padding: 15px 20px; border: 1px solid var(--line); border-radius: 13px; background: rgba(255,255,255,.7); }
+.progress-stats { display: flex; align-items: center; gap: 25px; margin-bottom: 11px; }
+.progress-stats > div { display: flex; align-items: baseline; gap: 6px; }
+.progress-stats strong { font-size: 17px; }
+.progress-stats span { color: var(--muted); font-size: 9px; }
+.progress-stats .accuracy { margin-left: auto; }
+.progress-stats .accuracy strong { color: var(--chapter-color); }
+.progress-track { height: 5px; overflow: hidden; border-radius: 5px; background: #e9e9e3; }
+.progress-fill { height: 100%; width: 0; border-radius: inherit; background: var(--chapter-color); transition: width .3s ease; }
+.practice-layout { display: grid; grid-template-columns: minmax(0, 1fr) 258px; gap: 19px; align-items: start; }
+.question-toolbar { min-height: 38px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.filter-group { display: flex; gap: 4px; padding: 3px; border: 1px solid var(--line); border-radius: 9px; background: #eeeee9; }
+.filter-button { border: 0; border-radius: 6px; padding: 6px 12px; color: var(--muted); background: transparent; cursor: pointer; font-size: 10px; }
+.filter-button.active { color: var(--ink); background: #fff; box-shadow: 0 2px 5px rgba(24,32,52,.06); font-weight: 600; }
+.question-position { color: var(--soft); font-size: 10px; font-variant-numeric: tabular-nums; }
+.question-card { padding: 27px 30px 20px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; box-shadow: var(--shadow); }
+.question-meta { display: flex; align-items: center; gap: 7px; margin-bottom: 19px; }
+.meta-badge { padding: 4px 8px; border-radius: 5px; font-size: 9px; font-weight: 600; }
+.meta-badge.type { color: var(--chapter-color); background: var(--chapter-soft); }
+.meta-badge.topic { color: #697185; background: #f2f3f4; }
+.meta-badge.number { margin-left: auto; color: var(--soft); background: transparent; font-variant-numeric: tabular-nums; }
+.question-text { min-height: 58px; margin: 0 0 22px; font-size: 18px; line-height: 1.65; letter-spacing: -.01em; font-weight: 650; }
+.options-list { display: grid; gap: 10px; }
+.option-button { width: 100%; min-height: 50px; display: flex; align-items: center; gap: 13px; padding: 11px 14px; border: 1px solid #e4e5e1; border-radius: 11px; color: #3f4657; background: #fdfdfc; text-align: left; cursor: pointer; transition: .16s ease; }
+.option-button:hover:not(:disabled) { border-color: var(--chapter-color); background: var(--chapter-soft); transform: translateX(2px); }
+.option-button.selected { border-color: var(--chapter-color); background: var(--chapter-soft); }
+.option-button.selected .option-letter { border-color: var(--chapter-color); color: #fff; background: var(--chapter-color); }
+.option-letter { flex: 0 0 28px; width: 28px; height: 28px; display: grid; place-items: center; border: 1px solid #dedfd9; border-radius: 8px; color: #7b8190; background: #fff; font: 600 11px/1 system-ui; }
+.option-text { flex: 1; font-size: 12px; line-height: 1.6; }
+.option-status { font-size: 16px; }
+.option-button:disabled { cursor: default; }
+.option-button.correct { border-color: #75bda6; color: #166e59; background: var(--green-soft); }
+.option-button.correct .option-letter { border-color: #75bda6; color: #fff; background: var(--green); }
+.option-button.wrong { border-color: #dfa0a5; color: #a63c46; background: var(--red-soft); }
+.option-button.wrong .option-letter { border-color: #dfa0a5; color: #fff; background: var(--red); }
+.option-button.dimmed { opacity: .48; }
+.feedback { margin-top: 18px; padding: 16px 18px; border-radius: 11px; background: #f5f6f4; border-left: 3px solid var(--green); }
+.feedback.is-wrong { border-left-color: var(--red); }
+.feedback-title { display: flex; align-items: center; gap: 7px; margin-bottom: 7px; font-size: 11px; font-weight: 700; }
+.feedback.is-wrong .feedback-title { color: var(--red); }
+.feedback:not(.is-wrong) .feedback-title { color: var(--green); }
+.feedback p { margin: 0; color: #5f6674; font-size: 11px; line-height: 1.8; }
+.feedback .correct-answer { margin-bottom: 5px; color: var(--ink); font-weight: 600; }
+.question-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 20px; padding-top: 15px; border-top: 1px solid #efefeb; }
+.bookmark-button { display: flex; align-items: center; gap: 6px; border: 0; padding: 4px 0; color: var(--muted); background: transparent; cursor: pointer; font-size: 10px; }
+.bookmark-button span { font-size: 18px; line-height: 1; }
+.bookmark-button.active { color: #b47a16; }
+.source-label { color: var(--soft); font-size: 9px; }
+.question-navigation { display: flex; justify-content: space-between; margin-top: 14px; }
+.question-map-card { position: sticky; top: 88px; padding: 20px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; }
+.map-heading { display: flex; justify-content: space-between; align-items: center; }
+.map-heading span { color: var(--soft); font-size: 7px; font-weight: 700; letter-spacing: .16em; }
+.map-heading h3 { margin: 4px 0 0; font-size: 15px; }
+.map-heading > strong { color: var(--chapter-color); font-size: 13px; }
+.map-legend { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin: 16px 0; color: var(--soft); font-size: 8px; }
+.map-legend span { display: flex; align-items: center; gap: 5px; }
+.legend-dot { width: 7px; height: 7px; border-radius: 2px; background: #e5e6e2; }
+.legend-dot.answered { background: #a9b0c0; }
+.legend-dot.correct { background: #65b59c; }
+.legend-dot.wrong { background: #d77a82; }
+.legend-dot.marked { background: #e6b958; }
+.question-map { display: grid; grid-template-columns: repeat(5, 1fr); gap: 7px; max-height: 300px; overflow-y: auto; padding: 2px; }
+.map-button { position: relative; aspect-ratio: 1; border: 1px solid #e5e6e2; border-radius: 7px; color: #818797; background: #fafaf8; cursor: pointer; font-size: 9px; font-variant-numeric: tabular-nums; }
+.map-button:hover { border-color: var(--chapter-color); }
+.map-button.answered { color: #fff; border-color: #9da6b8; background: #9da6b8; }
+.map-button.correct { color: #fff; border-color: #65b59c; background: #65b59c; }
+.map-button.wrong { color: #fff; border-color: #d77a82; background: #d77a82; }
+.map-button.current { outline: 2px solid var(--chapter-color); outline-offset: 2px; }
+.map-button.bookmarked::after { content: ""; position: absolute; width: 5px; height: 5px; right: 2px; top: 2px; border-radius: 50%; background: #f2c66d; box-shadow: 0 0 0 1px #fff; }
+.type-breakdown { margin-top: 18px; padding-top: 16px; border-top: 1px solid #efefeb; }
+.type-row { display: flex; justify-content: space-between; margin: 8px 0; color: var(--muted); font-size: 9px; }
+.type-row strong { color: var(--ink); font-weight: 600; }
+.reset-chapter-button { width: 100%; margin-top: 13px; padding: 9px; border: 1px dashed #d8d9d3; border-radius: 8px; color: var(--soft); background: transparent; cursor: pointer; font-size: 9px; }
+.reset-chapter-button:hover { color: var(--red); border-color: #ddb4b7; }
+.empty-state { padding: 70px 25px; border: 1px dashed #d7d8d2; border-radius: var(--radius); text-align: center; background: rgba(255,255,255,.6); }
+.empty-state > div { color: var(--green); font-size: 35px; }
+.empty-state h3 { margin: 12px 0 5px; font-size: 17px; }
+.empty-state p { margin: 0 0 20px; color: var(--muted); font-size: 11px; }
+
+.test-banner { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding: 13px 18px; border: 1px solid #efe0b8; border-radius: 12px; background: #fdf8ec; color: #8a6d1f; font-size: 11px; line-height: 1.7; }
+.test-banner.submitted { border-color: #c4e0d4; background: #eef7f2; color: #166e59; }
+.submit-bar { display: flex; gap: 9px; margin-top: 14px; }
+.submit-bar .primary-button, .submit-bar .secondary-button { flex: 1; }
+
+.score-dialog { width: min(520px, calc(100vw - 30px)); padding: 34px; border: 0; border-radius: 22px; color: var(--ink); background: #fff; box-shadow: 0 30px 100px rgba(16,25,43,.25); }
+.score-dialog::backdrop { background: rgba(17,26,43,.52); backdrop-filter: blur(4px); }
+.dialog-close { position: absolute; right: 15px; top: 12px; border: 0; color: var(--soft); background: transparent; cursor: pointer; font-size: 25px; }
+.score-header { text-align: center; }
+.score-header > span { color: var(--purple); font-size: 8px; font-weight: 700; letter-spacing: .16em; }
+.score-header h2 { margin: 8px 0 20px; font-size: 22px; }
+.score-ring { width: 125px; height: 125px; margin: 0 auto 20px; display: grid; place-items: center; border-radius: 50%; background: conic-gradient(var(--chapter-color) var(--score-angle), #ecece7 0); position: relative; }
+.score-ring::after { content: ""; position: absolute; inset: 9px; border-radius: 50%; background: #fff; }
+.score-ring div { position: relative; z-index: 1; }
+.score-ring strong { display: block; font-size: 32px; letter-spacing: -.05em; text-align: center; }
+.score-ring small { display: block; color: var(--soft); font-size: 9px; text-align: center; }
+.score-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 18px 0; }
+.score-summary div { padding: 12px; border-radius: 10px; background: #f6f6f2; text-align: center; }
+.score-summary strong { display: block; font-size: 20px; }
+.score-summary span { color: var(--soft); font-size: 9px; }
+.score-types { margin: 18px 0; }
+.score-type-row { display: grid; grid-template-columns: 70px 1fr 45px; align-items: center; gap: 9px; margin: 12px 0; font-size: 10px; }
+.score-type-track { height: 6px; border-radius: 5px; background: #eeeeea; overflow: hidden; }
+.score-type-fill { height: 100%; border-radius: inherit; background: var(--chapter-color); }
+.score-type-row strong { text-align: right; font-size: 9px; }
+.score-actions { display: flex; gap: 10px; justify-content: center; margin-top: 24px; flex-wrap: wrap; }
+.toast { position: fixed; z-index: 100; left: 50%; bottom: 28px; transform: translate(-50%, 15px); padding: 10px 18px; border-radius: 9px; color: #fff; background: #24324a; box-shadow: 0 8px 30px rgba(24,32,52,.2); font-size: 11px; opacity: 0; pointer-events: none; transition: .25s ease; }
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+@media (min-width: 1500px) {
+  .view { padding-left: 58px; padding-right: 58px; }
+  .hero { min-height: 350px; }
+}
+@media (max-width: 1100px) {
+  .sidebar { width: 220px; }
+  .main-content { margin-left: 220px; }
+  .view { padding: 30px 28px 50px; }
+  .topbar { padding: 0 28px; }
+  .hero { grid-template-columns: 1fr; }
+  .hero-visual { display: none; }
+  .chapter-grid { grid-template-columns: 1fr; }
+  .chapter-description { min-height: 0; }
+  .practice-layout { grid-template-columns: minmax(0, 1fr) 220px; }
+  .question-map-card { padding: 15px; }
+  .keyboard-hint { display: none; }
+}
+@media (max-width: 820px) {
+  .sidebar { transform: translateX(-100%); width: 248px; transition: transform .25s ease; }
+  .sidebar.open { transform: translateX(0); }
+  .sidebar-backdrop.open { display: block; position: fixed; inset: 0; z-index: 25; background: rgba(17,26,43,.4); }
+  .main-content { margin-left: 0; }
+  .mobile-menu { display: block !important; }
+  .topbar { padding: 0 20px; }
+  .breadcrumb { margin-right: auto; margin-left: 12px; }
+  .view { padding: 25px 20px 45px; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .practice-layout { grid-template-columns: 1fr; }
+  .question-map-card { position: static; order: -1; }
+  .question-map { grid-template-columns: repeat(10, 1fr); max-height: none; }
+  .map-legend { grid-template-columns: repeat(4, auto); }
+  .type-breakdown { display: flex; gap: 18px; flex-wrap: wrap; }
+  .type-row { gap: 7px; }
+  .reset-chapter-button { width: auto; padding: 8px 15px; }
+  .quiz-heading { align-items: flex-start; }
+}
+@media (max-width: 560px) {
+  .topbar { height: 58px; padding: 0 14px; }
+  .topbar-actions { gap: 8px; }
+  .breadcrumb span, .breadcrumb b { display: none; }
+  .view { padding: 22px 14px 40px; }
+  .hero { padding: 15px 4px 28px; min-height: 0; }
+  .hero h1 { font-size: 39px; }
+  .hero-copy > p { font-size: 12px; }
+  .hero-actions { flex-direction: column; align-items: stretch; }
+  .stats-grid { gap: 9px; margin-bottom: 32px; }
+  .stat-card { padding: 15px; }
+  .stat-card strong { font-size: 23px; }
+  .chapter-card { display: block; padding: 20px; }
+  .chapter-description { min-height: 0; }
+  .section-caption { display: none; }
+  .method-note { padding: 15px; }
+  .quiz-heading { display: block; }
+  .quiz-heading h1 { font-size: 25px; }
+  .quiz-heading-actions { margin-top: 18px; }
+  .quiz-heading-actions button { flex: 1; padding: 10px; }
+  .progress-stats { gap: 14px; flex-wrap: wrap; }
+  .progress-stats .accuracy { margin-left: 0; }
+  .question-toolbar { align-items: flex-end; gap: 8px; }
+  .filter-button { padding: 6px 9px; }
+  .question-card { padding: 21px 17px 17px; }
+  .question-text { font-size: 16px; }
+  .option-button { padding: 10px; gap: 10px; }
+  .option-text { font-size: 11px; }
+  .question-map { grid-template-columns: repeat(5, 1fr); }
+  .map-legend { grid-template-columns: 1fr 1fr; }
+  .score-dialog { padding: 28px 20px; }
+}
+</style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar" aria-label="章节导航">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">V<span>₀</span></div>
+        <div><strong>公司金融学习室</strong><small>CORPORATE FINANCE STUDIO</small></div>
+      </div>
+      <button class="nav-item active" id="homeNav" type="button">
+        <span class="nav-icon">⌂</span><span>学习总览</span>
+      </button>
+      <div class="nav-label">章节练习</div>
+      <nav id="chapterNav"></nav>
+      <div class="sidebar-note">
+        <div class="note-icon">✦</div>
+        <p>先理解，再记忆。<br>每道题都附有考点解析与出处。</p>
+      </div>
+      <div class="sidebar-footer">
+        <span class="save-dot"></span><span>学习进度自动保存在本机</span>
+      </div>
+    </aside>
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+    <main class="main-content">
+      <header class="topbar">
+        <button class="icon-button mobile-menu" id="menuButton" aria-label="打开章节导航" type="button">☰</button>
+        <div class="breadcrumb" id="breadcrumb"><span>公司金融</span><b>/</b><strong>学习总览</strong></div>
+        <div class="topbar-actions">
+          <span class="keyboard-hint">快捷键 1–4 作答 · ← → 切题</span>
+          <button class="text-button" id="resetAllButton" type="button">清空记录</button>
+        </div>
+      </header>
+
+      <section id="homeView" class="view home-view">
+        <div class="hero">
+          <div class="hero-copy">
+            <div class="eyebrow"><span></span> PRINCIPLES OF CORPORATE FINANCE · BREALEY 12E</div>
+            <h1>把资本预算学明白，<br><em>一题一题。</em></h1>
+            <p>覆盖 Ch05 净现值与其他投资准则、Ch06 运用 NPV 法则做投资决策、Ch09 风险与资本成本。每章 90 题题库，练习模式逐题精练，测验模式随机抽取 30 题模拟考试，答题后立即查看解析。</p>
+            <div class="hero-actions">
+              <button class="primary-button" id="startButton" type="button">开始 Chapter 5 <span>→</span></button>
+              <button class="secondary-button" id="continueButton" type="button">继续上次练习</button>
+            </div>
+          </div>
+          <div class="hero-visual" aria-hidden="true">
+            <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+            <div class="formula-card formula-main"><span>NET PRESENT VALUE</span><strong>NPV = Σ <i>CF<sub>t</sub></i> / (1+r)<sup>t</sup> − C₀</strong><small>现金流、风险与价值的桥梁</small></div>
+            <div class="formula-chip chip-one">IRR: NPV = 0</div>
+            <div class="formula-chip chip-two">PI = NPV / 投资</div>
+            <div class="formula-chip chip-three">r = r<sub>f</sub> + β(r<sub>m</sub> − r<sub>f</sub>)</div>
+          </div>
+        </div>
+
+        <div class="stats-grid" id="overallStats"></div>
+
+        <div class="section-heading">
+          <div><span class="section-kicker">YOUR COURSE</span><h2>三章题库</h2></div>
+          <span class="section-caption">每章 90 题 · 每次测验随机 30 题 · 共 270 题</span>
+        </div>
+        <div class="chapter-grid" id="chapterCards"></div>
+
+        <div class="method-note">
+          <div class="method-icon">◎</div>
+          <div><strong>如何使用本题库？</strong><p>练习模式覆盖每章全部 90 题，含概念辨析、计算应用与情境分析三类，答错立即看解析；测验模式从题库随机抽取 30 题，交卷前可修改答案，交卷后出分并逐题回顾。题目来源：BMA 12e 课件与教材课后题（未收录 Challenge 难度题）。所有题均为单项选择题。</p></div>
+        </div>
+      </section>
+
+      <section id="quizView" class="view quiz-view hidden">
+        <div class="quiz-heading">
+          <div>
+            <div class="eyebrow compact" id="quizEyebrow"></div>
+            <h1 id="quizTitle"></h1>
+            <p id="quizDescription"></p>
+          </div>
+          <div class="quiz-heading-actions">
+            <button class="secondary-button" id="shuffleButton" type="button">⇄ 随机题序</button>
+            <button class="secondary-button" id="gotoTestButton" type="button">▶ 30 题测验</button>
+            <button class="primary-button" id="scoreButton" type="button">查看成绩</button>
+          </div>
+        </div>
+
+        <div class="chapter-progress-card">
+          <div class="progress-stats" id="chapterProgressStats"></div>
+          <div class="progress-track"><div class="progress-fill" id="chapterProgressFill"></div></div>
+        </div>
+
+        <div class="practice-layout">
+          <div class="question-column">
+            <div class="question-toolbar">
+              <div class="filter-group" id="filterGroup" aria-label="筛选题目">
+                <button class="filter-button active" data-filter="all" type="button">全部</button>
+                <button class="filter-button" data-filter="unanswered" type="button">未答</button>
+                <button class="filter-button" data-filter="wrong" type="button">错题</button>
+                <button class="filter-button" data-filter="bookmarked" type="button">收藏</button>
+              </div>
+              <span class="question-position" id="questionPosition"></span>
+            </div>
+
+            <article class="question-card" id="questionCard">
+              <div class="question-meta" id="questionMeta"></div>
+              <h2 class="question-text" id="questionText"></h2>
+              <div class="options-list" id="optionsList"></div>
+              <div class="feedback hidden" id="feedback"></div>
+              <div class="question-footer">
+                <button class="bookmark-button" id="bookmarkButton" type="button"><span>☆</span> 收藏本题</button>
+                <span class="source-label" id="sourceLabel"></span>
+              </div>
+            </article>
+
+            <div class="question-navigation">
+              <button class="secondary-button" id="prevButton" type="button">← 上一题</button>
+              <button class="primary-button" id="nextButton" type="button">下一题 →</button>
+            </div>
+            <div class="empty-state hidden" id="emptyState">
+              <div>✓</div><h3>这个筛选下暂时没有题目</h3><p>切换上方筛选条件，或先完成更多练习。</p>
+              <button class="secondary-button" id="showAllButton" type="button">查看全部题目</button>
+            </div>
+          </div>
+
+          <aside class="question-map-card">
+            <div class="map-heading"><div><span>QUESTION MAP</span><h3>本章题号</h3></div><strong id="mapCount"></strong></div>
+            <div class="map-legend"><span><i class="legend-dot answered"></i>已答</span><span><i class="legend-dot correct"></i>答对</span><span><i class="legend-dot wrong"></i>答错</span><span><i class="legend-dot marked"></i>收藏</span></div>
+            <div class="question-map" id="questionMap"></div>
+            <div class="type-breakdown" id="typeBreakdown"></div>
+            <button class="reset-chapter-button" id="resetChapterButton" type="button">重新作答本章</button>
+          </aside>
+        </div>
+      </section>
+
+      <section id="testView" class="view quiz-view hidden">
+        <div class="quiz-heading">
+          <div>
+            <div class="eyebrow compact" id="testEyebrow"></div>
+            <h1 id="testTitle"></h1>
+            <p id="testDescription">从本章 90 题题库中随机抽取 30 题。交卷前可反复修改答案；交卷后显示成绩与逐题解析。</p>
+          </div>
+          <div class="quiz-heading-actions">
+            <button class="secondary-button" id="quitTestButton" type="button">← 返回练习</button>
+            <button class="secondary-button" id="newTestButton" type="button">↻ 换一组题</button>
+          </div>
+        </div>
+
+        <div class="test-banner" id="testBanner"></div>
+
+        <div class="chapter-progress-card">
+          <div class="progress-stats" id="testProgressStats"></div>
+          <div class="progress-track"><div class="progress-fill" id="testProgressFill"></div></div>
+        </div>
+
+        <div class="practice-layout">
+          <div class="question-column">
+            <div class="question-toolbar">
+              <span class="question-position" id="testPosition"></span>
+              <span class="question-position" id="testAnsweredCount"></span>
+            </div>
+
+            <article class="question-card" id="testCard">
+              <div class="question-meta" id="testMeta"></div>
+              <h2 class="question-text" id="testText"></h2>
+              <div class="options-list" id="testOptions"></div>
+              <div class="feedback hidden" id="testFeedback"></div>
+              <div class="question-footer">
+                <span class="source-label" id="testSource"></span>
+              </div>
+            </article>
+
+            <div class="question-navigation">
+              <button class="secondary-button" id="testPrevButton" type="button">← 上一题</button>
+              <button class="primary-button" id="testNextButton" type="button">下一题 →</button>
+            </div>
+            <div class="submit-bar">
+              <button class="primary-button" id="submitTestButton" type="button">交卷并查看成绩</button>
+            </div>
+          </div>
+
+          <aside class="question-map-card">
+            <div class="map-heading"><div><span>TEST MAP</span><h3>测验题号</h3></div><strong id="testMapCount"></strong></div>
+            <div class="map-legend"><span><i class="legend-dot answered"></i>已答</span><span><i class="legend-dot correct"></i>答对</span><span><i class="legend-dot wrong"></i>答错</span><span><i class="legend-dot"></i>未答</span></div>
+            <div class="question-map" id="testMap"></div>
+            <div class="type-breakdown" id="testTypeBreakdown"></div>
+          </aside>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <dialog class="score-dialog" id="scoreDialog">
+    <button class="dialog-close" id="closeScoreButton" aria-label="关闭成绩" type="button">×</button>
+    <div id="scoreContent"></div>
+  </dialog>
+  <div class="toast" id="toast" role="status"></div>
+
+  <script src="data-ch5.js"></script>
+  <script src="data-ch6.js"></script>
+  <script src="data-ch9.js"></script>
+  <script>
+(() => {
+  "use strict";
+
+  const TEST_SIZE = 30;
+  const typeColors = { "概念辨析": "#6d5dfc", "计算应用": "#e5aa45", "情境分析": "#38a78b" };
+  const letters = ["A", "B", "C", "D"];
+
+  const chapters = [
+    {
+      id: "ch05", chapter: "Chapter 5", title: "净现值与其他投资准则",
+      englishTitle: "Net Present Value and Other Investment Criteria",
+      description: "重点训练 NPV 法则三要点、回收期与折现回收期、IRR 的计算与四大陷阱、资本限额与盈利指数。",
+      color: "#6d5dfc", raw: window.QUIZ_CH5
+    },
+    {
+      id: "ch06", chapter: "Chapter 6", title: "运用 NPV 法则做投资决策",
+      englishTitle: "Making Investment Decisions with the NPV Rule",
+      description: "重点训练增量现金流识别、沉没成本与机会成本、营运资本、通胀一致性、折旧税盾与约当年均成本（EAC）。",
+      color: "#d8783e", raw: window.QUIZ_CH6
+    },
+    {
+      id: "ch09", chapter: "Chapter 9", title: "风险与资本成本",
+      englishTitle: "Risk and the Cost of Capital",
+      description: "重点训练公司资本成本与 WACC、CAPM 与贝塔估计、项目风险与经营杠杆、可分散风险与确定性等价（CEQ）。",
+      color: "#38a78b", raw: window.QUIZ_CH9
+    }
+  ];
+
+  chapters.forEach(chapter => {
+    chapter.questions = chapter.raw.map((q, index) => ({
+      id: `${chapter.id}-q${String(index + 1).padStart(2, "0")}`,
+      number: index + 1,
+      type: q.t, topic: q.tp, page: q.pg,
+      q: q.q, options: q.o, answer: q.a, explanation: q.ex, answerZh: q.az
+    }));
+    delete chapter.raw;
+  });
+
+  const $ = id => document.getElementById(id);
+  const els = {
+    sidebar: $("sidebar"), backdrop: $("sidebarBackdrop"), homeNav: $("homeNav"), chapterNav: $("chapterNav"),
+    breadcrumb: $("breadcrumb"), homeView: $("homeView"), quizView: $("quizView"), testView: $("testView"),
+    overallStats: $("overallStats"), chapterCards: $("chapterCards"), continueButton: $("continueButton"),
+    quizEyebrow: $("quizEyebrow"), quizTitle: $("quizTitle"), quizDescription: $("quizDescription"),
+    progressStats: $("chapterProgressStats"), progressFill: $("chapterProgressFill"),
+    questionPosition: $("questionPosition"), questionMeta: $("questionMeta"), questionText: $("questionText"),
+    optionsList: $("optionsList"), feedback: $("feedback"), bookmarkButton: $("bookmarkButton"),
+    sourceLabel: $("sourceLabel"), questionCard: $("questionCard"), emptyState: $("emptyState"),
+    prevButton: $("prevButton"), nextButton: $("nextButton"), questionMap: $("questionMap"),
+    mapCount: $("mapCount"), typeBreakdown: $("typeBreakdown"), scoreDialog: $("scoreDialog"),
+    scoreContent: $("scoreContent"), toast: $("toast"),
+    testEyebrow: $("testEyebrow"), testTitle: $("testTitle"), testBanner: $("testBanner"),
+    testProgressStats: $("testProgressStats"), testProgressFill: $("testProgressFill"),
+    testPosition: $("testPosition"), testAnsweredCount: $("testAnsweredCount"), testMeta: $("testMeta"),
+    testText: $("testText"), testOptions: $("testOptions"), testFeedback: $("testFeedback"),
+    testSource: $("testSource"), testCard: $("testCard"), testPrevButton: $("testPrevButton"),
+    testNextButton: $("testNextButton"), submitTestButton: $("submitTestButton"), testMap: $("testMap"),
+    testMapCount: $("testMapCount"), testTypeBreakdown: $("testTypeBreakdown")
+  };
+
+  function freshState() {
+    const orders = {}, currentIds = {}, filters = {}, tests = {}, history = {};
+    chapters.forEach(chapter => {
+      orders[chapter.id] = chapter.questions.map(q => q.id);
+      currentIds[chapter.id] = chapter.questions[0].id;
+      filters[chapter.id] = "all";
+      history[chapter.id] = { attempts: 0, best: null };
+    });
+    return {
+      view: "home", currentChapter: "ch05", lastChapter: "ch05",
+      answers: {}, bookmarks: [], orders, currentIds, filters, tests, history
+    };
+  }
+
+  const STORAGE_KEY = "corporate-finance-studio-v1";
+
+  function loadState() {
+    const base = freshState();
+    try {
+      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+      if (!saved || typeof saved !== "object") return base;
+      const merged = { ...base, ...saved };
+      merged.answers = saved.answers && typeof saved.answers === "object" ? saved.answers : {};
+      merged.bookmarks = Array.isArray(saved.bookmarks) ? saved.bookmarks : [];
+      merged.orders = { ...base.orders, ...(saved.orders || {}) };
+      merged.currentIds = { ...base.currentIds, ...(saved.currentIds || {}) };
+      merged.filters = { ...base.filters, ...(saved.filters || {}) };
+      merged.tests = saved.tests && typeof saved.tests === "object" ? saved.tests : {};
+      merged.history = { ...base.history, ...(saved.history || {}) };
+      if (!chapters.some(c => c.id === merged.currentChapter)) merged.currentChapter = "ch05";
+      chapters.forEach(chapter => {
+        const validIds = new Set(chapter.questions.map(q => q.id));
+        const savedOrder = Array.isArray(merged.orders[chapter.id]) ? merged.orders[chapter.id] : [];
+        const cleanOrder = savedOrder.filter((id, i) => validIds.has(id) && savedOrder.indexOf(id) === i);
+        chapter.questions.forEach(q => { if (!cleanOrder.includes(q.id)) cleanOrder.push(q.id); });
+        merged.orders[chapter.id] = cleanOrder;
+        if (!validIds.has(merged.currentIds[chapter.id])) merged.currentIds[chapter.id] = cleanOrder[0];
+        const t = merged.tests[chapter.id];
+        if (t && (!Array.isArray(t.ids) || !t.ids.every(id => validIds.has(id)))) delete merged.tests[chapter.id];
+      });
+      return merged;
+    } catch (_) { return base; }
+  }
+
+  let state = loadState();
+  let toastTimer;
+  const currentChapter = () => chapters.find(c => c.id === state.currentChapter);
+  const allQuestions = () => chapters.flatMap(c => c.questions);
+  const getQuestion = id => allQuestions().find(q => q.id === id);
+  const isBookmarked = id => state.bookmarks.includes(id);
+  const save = () => {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (_) { /* file privacy mode */ }
+  };
+  const escapeHTML = value => String(value).replace(/[&<>'"]/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[char]));
+  const chapterStats = chapter => {
+    const answered = chapter.questions.filter(q => state.answers[q.id] !== undefined).length;
+    const correct = chapter.questions.filter(q => state.answers[q.id] === q.answer).length;
+    const marked = chapter.questions.filter(q => isBookmarked(q.id)).length;
+    return { answered, correct, wrong: answered - correct, marked, total: chapter.questions.length };
+  };
+  const globalStats = () => {
+    const answered = allQuestions().filter(q => state.answers[q.id] !== undefined).length;
+    const correct = allQuestions().filter(q => state.answers[q.id] === q.answer).length;
+    return { answered, correct, wrong: answered - correct, marked: state.bookmarks.length, total: allQuestions().length };
+  };
+  const typeCounts = chapter => chapter.questions.reduce((acc, q) => { acc[q.type] = (acc[q.type] || 0) + 1; return acc; }, {});
+  const softColor = hex => `${hex}16`;
+
+  function showToast(message) {
+    clearTimeout(toastTimer);
+    els.toast.textContent = message;
+    els.toast.classList.add("show");
+    toastTimer = setTimeout(() => els.toast.classList.remove("show"), 1800);
+  }
+
+  function closeSidebar() {
+    els.sidebar.classList.remove("open");
+    els.backdrop.classList.remove("open");
+  }
+
+  function goHome() {
+    state.view = "home";
+    save();
+    render();
+    closeSidebar();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function openChapter(chapterId) {
+    state.currentChapter = chapterId;
+    state.lastChapter = chapterId;
+    state.view = "practice";
+    save();
+    render();
+    closeSidebar();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function filteredQuestions(chapter) {
+    const filter = state.filters[chapter.id];
+    return state.orders[chapter.id].map(getQuestion).filter(q => {
+      const answer = state.answers[q.id];
+      if (filter === "unanswered") return answer === undefined;
+      if (filter === "wrong") return answer !== undefined && answer !== q.answer;
+      if (filter === "bookmarked") return isBookmarked(q.id);
+      return true;
+    });
+  }
+
+  function renderChapterNav() {
+    const icons = { ch05: "∑", ch06: "↗", ch09: "⌁" };
+    els.chapterNav.innerHTML = chapters.map(chapter => {
+      const stats = chapterStats(chapter);
+      return `<button class="nav-item ${state.view !== "home" && state.currentChapter === chapter.id ? "active" : ""}" data-chapter="${chapter.id}" type="button">
+        <span class="nav-icon">${icons[chapter.id] || "∑"}</span>
+        <span class="nav-copy"><strong>${chapter.chapter}</strong><small>${chapter.title}</small></span>
+        <span class="nav-progress">${stats.answered}/${stats.total}</span>
+      </button>`;
+    }).join("");
+    els.chapterNav.querySelectorAll("[data-chapter]").forEach(button => button.addEventListener("click", () => openChapter(button.dataset.chapter)));
+    els.homeNav.classList.toggle("active", state.view === "home");
+  }
+
+  function renderHome() {
+    const stats = globalStats();
+    const accuracy = stats.answered ? Math.round(stats.correct / stats.answered * 100) : 0;
+    const attempts = chapters.reduce((n, c) => n + (state.history[c.id] ? state.history[c.id].attempts : 0), 0);
+    els.overallStats.innerHTML = [
+      ["题库总量", stats.total, "道单项选择题", "▤"],
+      ["已经完成", stats.answered, `还剩 ${stats.total - stats.answered} 题`, "✓"],
+      ["当前正确率", `${accuracy}%`, stats.answered ? `答对 ${stats.correct} 题` : "等待你的首答", "◎"],
+      ["测验次数", attempts, "每次随机 30 题", "▶"]
+    ].map(([label, value, note, icon]) => `<div class="stat-card"><div class="stat-label"><span>${label}</span><span class="stat-icon">${icon}</span></div><strong>${value}</strong><small>${note}</small></div>`).join("");
+
+    els.chapterCards.innerHTML = chapters.map(chapter => {
+      const stats = chapterStats(chapter);
+      const counts = typeCounts(chapter);
+      const distribution = Object.entries(counts).map(([type, count]) => `<span style="width:${count / stats.total * 100}%;background:${typeColors[type]}" title="${type} ${count} 题"></span>`).join("");
+      const legend = Object.entries(counts).map(([type, count]) => `<span>${type} ${count}</span>`).join("");
+      const h = state.history[chapter.id] || { attempts: 0, best: null };
+      const bestLine = h.attempts ? `已测 ${h.attempts} 次 · 最好成绩 ${h.best} 分` : "还没有测验记录";
+      return `<article class="chapter-card" style="--chapter-color:${chapter.color};--chapter-soft:${softColor(chapter.color)}">
+        <div class="chapter-number"><span>${chapter.chapter.toUpperCase()}</span><small>90 QUESTIONS</small></div>
+        <div><h3>${chapter.title}</h3><p class="chapter-english">${chapter.englishTitle}</p></div>
+        <p class="chapter-description">${chapter.description}</p>
+        <div><div class="distribution">${distribution}</div><div class="distribution-legend">${legend}</div></div>
+        <div class="chapter-card-footer">
+          <span>已练 ${stats.answered}/90 · 答对 ${stats.correct}</span>
+          <button class="card-start" data-start="${chapter.id}" type="button">${stats.answered ? "继续练习" : "开始练习"} →</button>
+          <button class="card-test" data-test="${chapter.id}" type="button">▶ 30 题测验</button>
+          <span class="test-best">${bestLine}</span>
+        </div>
+      </article>`;
+    }).join("");
+    els.chapterCards.querySelectorAll("[data-start]").forEach(button => button.addEventListener("click", () => openChapter(button.dataset.start)));
+    els.chapterCards.querySelectorAll("[data-test]").forEach(button => button.addEventListener("click", () => startTest(button.dataset.test)));
+    els.continueButton.textContent = stats.answered ? `继续 ${chapters.find(c => c.id === state.lastChapter).chapter}` : "从第一章开始";
+  }
+
+  function renderProgress(chapter) {
+    const stats = chapterStats(chapter);
+    const accuracy = stats.answered ? Math.round(stats.correct / stats.answered * 100) : 0;
+    els.progressStats.innerHTML = `<div><strong>${stats.answered}</strong><span>/ ${stats.total} 已答</span></div><div><strong>${stats.correct}</strong><span>答对</span></div><div><strong>${stats.wrong}</strong><span>答错</span></div><div class="accuracy"><strong>${accuracy}%</strong><span>已答正确率</span></div>`;
+    els.progressFill.style.width = `${stats.answered / stats.total * 100}%`;
+  }
+
+  function renderQuestion(chapter) {
+    const filtered = filteredQuestions(chapter);
+    const hasQuestions = filtered.length > 0;
+    els.questionCard.classList.toggle("hidden", !hasQuestions);
+    els.emptyState.classList.toggle("hidden", hasQuestions);
+    document.querySelector("#quizView .question-navigation").classList.toggle("hidden", !hasQuestions);
+    els.questionPosition.textContent = hasQuestions ? `${filtered.length} 题可练习` : "0 题";
+    if (!hasQuestions) {
+      els.prevButton.disabled = els.nextButton.disabled = true;
+      renderMap(chapter);
+      return;
+    }
+
+    let index = filtered.findIndex(q => q.id === state.currentIds[chapter.id]);
+    if (index < 0) {
+      index = 0;
+      state.currentIds[chapter.id] = filtered[0].id;
+      save();
+    }
+    const q = filtered[index];
+    const selected = state.answers[q.id];
+    const answered = selected !== undefined;
+    const isCorrect = selected === q.answer;
+    const marked = isBookmarked(q.id);
+
+    els.questionPosition.textContent = `当前 ${index + 1} / ${filtered.length}`;
+    els.questionMeta.innerHTML = `<span class="meta-badge type">${q.type}</span><span class="meta-badge topic">${escapeHTML(q.topic)}</span><span class="meta-badge number">QUESTION ${String(q.number).padStart(2, "0")}</span>`;
+    els.questionText.textContent = q.q;
+    els.optionsList.innerHTML = q.options.map((option, optionIndex) => {
+      let className = "option-button";
+      let status = "";
+      if (answered) {
+        if (optionIndex === q.answer) { className += " correct"; status = "✓"; }
+        else if (optionIndex === selected) { className += " wrong"; status = "×"; }
+        else className += " dimmed";
+      }
+      return `<button class="${className}" data-option="${optionIndex}" type="button" ${answered ? "disabled" : ""}><span class="option-letter">${letters[optionIndex]}</span><span class="option-text">${escapeHTML(option)}</span><span class="option-status">${status}</span></button>`;
+    }).join("");
+    els.optionsList.querySelectorAll("[data-option]").forEach(button => button.addEventListener("click", () => answerQuestion(q, Number(button.dataset.option))));
+
+    els.feedback.classList.toggle("hidden", !answered);
+    if (answered) {
+      els.feedback.classList.toggle("is-wrong", !isCorrect);
+      els.feedback.innerHTML = `<div class="feedback-title">${isCorrect ? "✓ 回答正确" : "× 回答错误"}</div><p>${!isCorrect ? `<span class="correct-answer">正确答案：${letters[q.answer]}．${escapeHTML(q.answerZh || q.options[q.answer])}</span><br>` : ""}${escapeHTML(q.explanation)}</p>`;
+    }
+    els.bookmarkButton.classList.toggle("active", marked);
+    els.bookmarkButton.innerHTML = `<span>${marked ? "★" : "☆"}</span> ${marked ? "已收藏" : "收藏本题"}`;
+    els.bookmarkButton.onclick = () => toggleBookmark(q.id);
+    els.sourceLabel.textContent = `来源：${q.page} · ${q.topic}`;
+    els.prevButton.disabled = index === 0;
+    els.nextButton.disabled = index === filtered.length - 1;
+    els.prevButton.onclick = () => navigateQuestion(-1);
+    els.nextButton.onclick = () => navigateQuestion(1);
+    renderMap(chapter);
+  }
+
+  function renderMap(chapter) {
+    const stats = chapterStats(chapter);
+    els.mapCount.textContent = `${stats.answered} / ${stats.total}`;
+    els.questionMap.innerHTML = state.orders[chapter.id].map(getQuestion).map(q => {
+      const answer = state.answers[q.id];
+      const status = answer === undefined ? "" : answer === q.answer ? "correct" : "wrong";
+      const classes = ["map-button", status, q.id === state.currentIds[chapter.id] ? "current" : "", isBookmarked(q.id) ? "bookmarked" : ""].filter(Boolean).join(" ");
+      return `<button class="${classes}" data-map-id="${q.id}" type="button" title="第 ${q.number} 题 · ${escapeHTML(q.topic)}">${q.number}</button>`;
+    }).join("");
+    els.questionMap.querySelectorAll("[data-map-id]").forEach(button => button.addEventListener("click", () => {
+      state.currentIds[chapter.id] = button.dataset.mapId;
+      save(); renderQuestion(chapter);
+      if (window.innerWidth < 821) els.questionCard.scrollIntoView({ behavior: "smooth", block: "start" });
+    }));
+    const counts = typeCounts(chapter);
+    els.typeBreakdown.innerHTML = Object.entries(counts).map(([type, count]) => `<div class="type-row"><span>${type}</span><strong>${count} 题 · ${Math.round(count / stats.total * 100)}%</strong></div>`).join("");
+  }
+
+  function renderQuiz() {
+    const chapter = currentChapter();
+    els.quizView.style.setProperty("--chapter-color", chapter.color);
+    els.quizView.style.setProperty("--chapter-soft", softColor(chapter.color));
+    els.quizEyebrow.textContent = `${chapter.chapter.toUpperCase()} · ${chapter.englishTitle.toUpperCase()} · 练习模式`;
+    els.quizTitle.textContent = chapter.title;
+    els.quizDescription.textContent = chapter.description;
+    document.querySelectorAll("#filterGroup .filter-button").forEach(button => button.classList.toggle("active", button.dataset.filter === state.filters[chapter.id]));
+    renderProgress(chapter);
+    renderQuestion(chapter);
+  }
+
+  /* ---------- 测验模式（每次随机 30 题） ---------- */
+
+  function getTest(chapter) { return state.tests[chapter.id]; }
+
+  function startTest(chapterId) {
+    const chapter = chapters.find(c => c.id === chapterId);
+    const existing = state.tests[chapterId];
+    if (existing && !existing.submitted) {
+      if (!window.confirm(`${chapter.chapter} 有一套未交卷的测验，要继续吗？\n「确定」继续作答，「取消」重新抽 30 题。`)) {
+        state.tests[chapterId] = null;
+      }
+    }
+    if (!state.tests[chapterId]) {
+      const pool = [...chapter.questions.map(q => q.id)];
+      for (let i = pool.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [pool[i], pool[j]] = [pool[j], pool[i]];
+      }
+      state.tests[chapterId] = { ids: pool.slice(0, TEST_SIZE), answers: {}, index: 0, submitted: false, score: null };
+    }
+    state.currentChapter = chapterId;
+    state.lastChapter = chapterId;
+    state.view = "test";
+    save();
+    render();
+    closeSidebar();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function testStats(test) {
+    const total = test.ids.length;
+    const answered = test.ids.filter(id => test.answers[id] !== undefined).length;
+    const correct = test.ids.filter(id => test.answers[id] === getQuestion(id).answer).length;
+    return { total, answered, correct, wrong: answered - correct };
+  }
+
+  function renderTest() {
+    const chapter = currentChapter();
+    const test = getTest(chapter);
+    if (!test) { state.view = "practice"; save(); render(); return; }
+    els.testView.style.setProperty("--chapter-color", chapter.color);
+    els.testView.style.setProperty("--chapter-soft", softColor(chapter.color));
+    els.testEyebrow.textContent = `${chapter.chapter.toUpperCase()} · ${chapter.englishTitle.toUpperCase()} · 测验模式`;
+    els.testTitle.textContent = `${chapter.title} · 30 题测验`;
+
+    const stats = testStats(test);
+    els.testBanner.className = `test-banner${test.submitted ? " submitted" : ""}`;
+    els.testBanner.textContent = test.submitted
+      ? `✓ 本套测验已交卷，得分 ${test.score} 分（答对 ${stats.correct} / ${stats.total}）。现在可以逐题查看解析。`
+      : `测验进行中：共 ${stats.total} 题，交卷前可随时修改答案；题目从本章 90 题题库随机抽取。`;
+    els.testProgressStats.innerHTML = `<div><strong>${stats.answered}</strong><span>/ ${stats.total} 已答</span></div>${test.submitted ? `<div><strong>${stats.correct}</strong><span>答对</span></div><div><strong>${stats.wrong}</strong><span>答错</span></div><div class="accuracy"><strong>${test.score}</strong><span>得分</span></div>` : `<div class="accuracy"><strong>${stats.total - stats.answered}</strong><span>待作答</span></div>`}`;
+    els.testProgressFill.style.width = `${stats.answered / stats.total * 100}%`;
+
+    const qid = test.ids[test.index];
+    const q = getQuestion(qid);
+    const selected = test.answers[qid];
+    const answered = selected !== undefined;
+
+    els.testPosition.textContent = `第 ${test.index + 1} / ${stats.total} 题`;
+    els.testAnsweredCount.textContent = `已答 ${stats.answered} 题`;
+    els.testMeta.innerHTML = `<span class="meta-badge type">${q.type}</span><span class="meta-badge topic">${escapeHTML(q.topic)}</span><span class="meta-badge number">QUESTION ${test.index + 1} / ${stats.total}</span>`;
+    els.testText.textContent = q.q;
+    els.testOptions.innerHTML = q.options.map((option, optionIndex) => {
+      let className = "option-button";
+      let status = "";
+      if (test.submitted) {
+        if (optionIndex === q.answer) { className += " correct"; status = "✓"; }
+        else if (optionIndex === selected) { className += " wrong"; status = "×"; }
+        else className += " dimmed";
+      } else if (optionIndex === selected) {
+        className += " selected";
+      }
+      return `<button class="${className}" data-option="${optionIndex}" type="button" ${test.submitted ? "disabled" : ""}><span class="option-letter">${letters[optionIndex]}</span><span class="option-text">${escapeHTML(option)}</span><span class="option-status">${status}</span></button>`;
+    }).join("");
+    if (!test.submitted) {
+      els.testOptions.querySelectorAll("[data-option]").forEach(button => button.addEventListener("click", () => {
+        test.answers[qid] = Number(button.dataset.option);
+        save(); renderTest();
+      }));
+    }
+
+    const showFeedback = test.submitted;
+    els.testFeedback.classList.toggle("hidden", !showFeedback);
+    if (showFeedback) {
+      const isCorrect = selected === q.answer;
+      els.testFeedback.classList.toggle("is-wrong", !isCorrect);
+      els.testFeedback.innerHTML = `<div class="feedback-title">${!answered ? "○ 未作答" : isCorrect ? "✓ 回答正确" : "× 回答错误"}</div><p><span class="correct-answer">正确答案：${letters[q.answer]}．${escapeHTML(q.answerZh || q.options[q.answer])}</span><br>${escapeHTML(q.explanation)}</p>`;
+    }
+    els.testSource.textContent = `来源：${q.page} · ${q.topic}`;
+
+    els.testPrevButton.disabled = test.index === 0;
+    els.testNextButton.disabled = test.index === stats.total - 1;
+    els.testPrevButton.onclick = () => { test.index--; save(); renderTest(); };
+    els.testNextButton.onclick = () => { test.index++; save(); renderTest(); };
+    els.submitTestButton.textContent = test.submitted ? "已交卷 · 查看成绩" : "交卷并查看成绩";
+    els.submitTestButton.onclick = () => test.submitted ? showTestScore() : submitTest();
+
+    els.testMapCount.textContent = `${stats.answered} / ${stats.total}`;
+    els.testMap.innerHTML = test.ids.map((id, i) => {
+      const tq = getQuestion(id);
+      const ans = test.answers[id];
+      let status = "";
+      if (test.submitted) status = ans === undefined ? "" : ans === tq.answer ? "correct" : "wrong";
+      else status = ans !== undefined ? "answered" : "";
+      const classes = ["map-button", status, i === test.index ? "current" : ""].filter(Boolean).join(" ");
+      return `<button class="${classes}" data-test-index="${i}" type="button" title="第 ${i + 1} 题 · ${escapeHTML(tq.topic)}">${i + 1}</button>`;
+    }).join("");
+    els.testMap.querySelectorAll("[data-test-index]").forEach(button => button.addEventListener("click", () => {
+      test.index = Number(button.dataset.testIndex);
+      save(); renderTest();
+      if (window.innerWidth < 821) els.testCard.scrollIntoView({ behavior: "smooth", block: "start" });
+    }));
+    const counts = {};
+    test.ids.forEach(id => { const t = getQuestion(id).type; counts[t] = (counts[t] || 0) + 1; });
+    els.testTypeBreakdown.innerHTML = Object.entries(counts).map(([type, count]) => `<div class="type-row"><span>${type}</span><strong>${count} 题</strong></div>`).join("");
+  }
+
+  function submitTest() {
+    const chapter = currentChapter();
+    const test = getTest(chapter);
+    const stats = testStats(test);
+    const unanswered = stats.total - stats.answered;
+    if (unanswered > 0 && !window.confirm(`还有 ${unanswered} 题未作答，确定交卷吗？未答题按答错计分。`)) return;
+    test.submitted = true;
+    test.score = Math.round(stats.correct / stats.total * 100);
+    const h = state.history[chapter.id];
+    h.attempts += 1;
+    if (h.best === null || test.score > h.best) h.best = test.score;
+    save();
+    renderChapterNav();
+    renderTest();
+    showTestScore();
+  }
+
+  function showTestScore() {
+    const chapter = currentChapter();
+    const test = getTest(chapter);
+    const stats = testStats(test);
+    const percent = test.score;
+    els.scoreContent.innerHTML = `<div class="score-header"><span>TEST REPORT</span><h2>${chapter.chapter} · 测验成绩</h2><div class="score-ring" style="--score-angle:${percent * 3.6}deg;--chapter-color:${chapter.color}"><div><strong>${percent}</strong><small>满分 100</small></div></div></div>
+      <div class="score-summary"><div><strong>${stats.correct}</strong><span>答对</span></div><div><strong>${stats.wrong}</strong><span>答错</span></div><div><strong>${stats.total - stats.answered}</strong><span>未答</span></div></div>
+      <div class="score-actions"><button class="secondary-button" id="scoreReviewInner" type="button">逐题查看解析</button><button class="primary-button" id="scoreRetakeInner" type="button">再测一组（30 题）</button></div>`;
+    els.scoreDialog.showModal();
+    $("scoreReviewInner").onclick = () => { els.scoreDialog.close(); renderTest(); };
+    $("scoreRetakeInner").onclick = () => {
+      els.scoreDialog.close();
+      state.tests[chapter.id] = null;
+      save();
+      startTest(chapter.id);
+    };
+  }
+
+  function render() {
+    const view = state.view;
+    els.homeView.classList.toggle("hidden", view !== "home");
+    els.quizView.classList.toggle("hidden", view !== "practice");
+    els.testView.classList.toggle("hidden", view !== "test");
+    const chapter = currentChapter();
+    const crumb = view === "home" ? "学习总览" : view === "test" ? `${chapter.chapter} · 30 题测验` : `${chapter.chapter} · ${chapter.title}`;
+    els.breadcrumb.innerHTML = `<span>公司金融</span><b>/</b><strong>${crumb}</strong>`;
+    document.title = view === "home" ? "公司金融学习室 · 三章交互题库" : `${chapter.chapter} ${chapter.title} · 公司金融学习室`;
+    renderChapterNav();
+    if (view === "home") renderHome();
+    else if (view === "practice") renderQuiz();
+    else renderTest();
+  }
+
+  function answerQuestion(question, optionIndex) {
+    if (state.answers[question.id] !== undefined) return;
+    state.answers[question.id] = optionIndex;
+    save();
+    renderChapterNav();
+    renderProgress(currentChapter());
+    renderQuestion(currentChapter());
+  }
+
+  function navigateQuestion(direction) {
+    const chapter = currentChapter();
+    const filtered = filteredQuestions(chapter);
+    const index = filtered.findIndex(q => q.id === state.currentIds[chapter.id]);
+    const target = filtered[index + direction];
+    if (!target) return;
+    state.currentIds[chapter.id] = target.id;
+    save(); renderQuestion(chapter);
+    els.questionCard.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+
+  function toggleBookmark(id) {
+    if (isBookmarked(id)) {
+      state.bookmarks = state.bookmarks.filter(item => item !== id);
+      showToast("已取消收藏");
+    } else {
+      state.bookmarks.push(id);
+      showToast("已加入收藏，方便考前回顾");
+    }
+    save(); renderQuestion(currentChapter());
+  }
+
+  function setFilter(filter) {
+    const chapter = currentChapter();
+    state.filters[chapter.id] = filter;
+    const filtered = filteredQuestions(chapter);
+    if (filtered.length && !filtered.some(q => q.id === state.currentIds[chapter.id])) state.currentIds[chapter.id] = filtered[0].id;
+    save();
+    document.querySelectorAll("#filterGroup .filter-button").forEach(button => button.classList.toggle("active", button.dataset.filter === filter));
+    renderQuestion(chapter);
+  }
+
+  function shuffleChapter() {
+    const chapter = currentChapter();
+    const order = [...state.orders[chapter.id]];
+    for (let i = order.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [order[i], order[j]] = [order[j], order[i]];
+    }
+    state.orders[chapter.id] = order;
+    save(); renderQuestion(chapter);
+    showToast("本章题序已随机排列，答题记录已保留");
+  }
+
+  function showScore() {
+    const chapter = currentChapter();
+    const stats = chapterStats(chapter);
+    const percent = Math.round(stats.correct / stats.total * 100);
+    const counts = typeCounts(chapter);
+    const rows = Object.keys(counts).map(type => {
+      const questions = chapter.questions.filter(q => q.type === type);
+      const correct = questions.filter(q => state.answers[q.id] === q.answer).length;
+      const answered = questions.filter(q => state.answers[q.id] !== undefined).length;
+      return `<div class="score-type-row"><span>${type}</span><div class="score-type-track"><div class="score-type-fill" style="width:${correct / questions.length * 100}%"></div></div><strong>${correct}/${questions.length} · 已答${answered}</strong></div>`;
+    }).join("");
+    els.scoreContent.innerHTML = `<div class="score-header"><span>CHAPTER REPORT</span><h2>${chapter.chapter} · 本章练习成绩</h2><div class="score-ring" style="--score-angle:${percent * 3.6}deg;--chapter-color:${chapter.color}"><div><strong>${percent}</strong><small>满分 100</small></div></div></div>
+      <div class="score-summary"><div><strong>${stats.correct}</strong><span>答对</span></div><div><strong>${stats.wrong}</strong><span>答错</span></div><div><strong>${stats.total - stats.answered}</strong><span>未答</span></div></div>
+      <div class="score-types">${rows}</div>
+      <div class="score-actions"><button class="secondary-button" id="scoreCloseInner" type="button">继续练习</button><button class="primary-button" id="reviewWrongButton" type="button" ${stats.wrong ? "" : "disabled"}>复习错题 ${stats.wrong ? `(${stats.wrong})` : ""}</button></div>`;
+    els.scoreDialog.showModal();
+    $("scoreCloseInner").onclick = () => els.scoreDialog.close();
+    $("reviewWrongButton").onclick = () => { els.scoreDialog.close(); setFilter("wrong"); };
+  }
+
+  function resetChapter() {
+    const chapter = currentChapter();
+    if (!window.confirm(`确定清空 ${chapter.chapter} 的全部作答记录吗？收藏会保留。`)) return;
+    chapter.questions.forEach(q => delete state.answers[q.id]);
+    state.currentIds[chapter.id] = state.orders[chapter.id][0];
+    state.filters[chapter.id] = "all";
+    save(); render(); showToast("本章作答记录已清空");
+  }
+
+  function resetAll() {
+    if (!window.confirm("确定清空三章的全部作答、收藏、测验与题序记录吗？此操作无法撤销。")) return;
+    state = freshState();
+    save(); render(); showToast("全部学习记录已清空");
+  }
+
+  els.homeNav.addEventListener("click", goHome);
+  $("startButton").addEventListener("click", () => openChapter("ch05"));
+  els.continueButton.addEventListener("click", () => openChapter(state.lastChapter));
+  $("menuButton").addEventListener("click", () => { els.sidebar.classList.add("open"); els.backdrop.classList.add("open"); });
+  els.backdrop.addEventListener("click", closeSidebar);
+  $("shuffleButton").addEventListener("click", shuffleChapter);
+  $("gotoTestButton").addEventListener("click", () => startTest(state.currentChapter));
+  $("newTestButton").addEventListener("click", () => {
+    const chapter = currentChapter();
+    const test = getTest(chapter);
+    if (test && !test.submitted && !window.confirm("当前测验尚未交卷，确定放弃并重新抽 30 题吗？")) return;
+    state.tests[chapter.id] = null;
+    save();
+    startTest(chapter.id);
+  });
+  $("quitTestButton").addEventListener("click", () => { state.view = "practice"; save(); render(); });
+  $("scoreButton").addEventListener("click", showScore);
+  $("resetChapterButton").addEventListener("click", resetChapter);
+  $("resetAllButton").addEventListener("click", resetAll);
+  $("closeScoreButton").addEventListener("click", () => els.scoreDialog.close());
+  $("showAllButton").addEventListener("click", () => setFilter("all"));
+  document.querySelectorAll("#filterGroup .filter-button").forEach(button => button.addEventListener("click", () => setFilter(button.dataset.filter)));
+  els.scoreDialog.addEventListener("click", event => {
+    const rect = els.scoreDialog.getBoundingClientRect();
+    if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) els.scoreDialog.close();
+  });
+
+  document.addEventListener("keydown", event => {
+    if (els.scoreDialog.open || /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)) return;
+    const chapter = currentChapter();
+    if (state.view === "practice") {
+      const q = getQuestion(state.currentIds[chapter.id]);
+      if (["1", "2", "3", "4"].includes(event.key) && q && state.answers[q.id] === undefined && filteredQuestions(chapter).some(item => item.id === q.id)) {
+        answerQuestion(q, Number(event.key) - 1);
+      } else if (event.key === "ArrowLeft") { event.preventDefault(); navigateQuestion(-1); }
+      else if (event.key === "ArrowRight") { event.preventDefault(); navigateQuestion(1); }
+      else if (event.key.toLowerCase() === "b" && q) toggleBookmark(q.id);
+    } else if (state.view === "test") {
+      const test = getTest(chapter);
+      if (!test) return;
+      if (["1", "2", "3", "4"].includes(event.key) && !test.submitted) {
+        test.answers[test.ids[test.index]] = Number(event.key) - 1;
+        save(); renderTest();
+      } else if (event.key === "ArrowLeft" && test.index > 0) { event.preventDefault(); test.index--; save(); renderTest(); }
+      else if (event.key === "ArrowRight" && test.index < test.ids.length - 1) { event.preventDefault(); test.index++; save(); renderTest(); }
+    }
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
